@@ -1,0 +1,14 @@
+{
+  "name": "node24-og-tag-test",
+  "version": "1.0.0",
+  "description": "A basic Node.js 24 static server to test og tags",
+  "main": "server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs"
+  },
+  "keywords": [],
+  "author": "Mauricio Schneider",
+  "license": "ISC"
+}

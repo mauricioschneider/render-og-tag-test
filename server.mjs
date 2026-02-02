@@ -9,7 +9,7 @@ const PORT = 3000;
 // Mapping file extensions to content types
 const MIME_TYPES = {
     '.html': 'text/html',
-    '.webp': 'image/webp',
+    '.png': 'image/png',
     '.js': 'text/javascript',
     '.css': 'text/css',
 };

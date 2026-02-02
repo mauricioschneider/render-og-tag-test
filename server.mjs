@@ -3,22 +3,40 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Get current directory path (necessary in ES Modules)
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = 3000;
 
-const server = http.createServer((req, res) => {
-    const filePath = path.join(__dirname, 'index.html');
+// Mapping file extensions to content types
+const MIME_TYPES = {
+    '.html': 'text/html',
+    '.webp': 'image/webp',
+    '.js': 'text/javascript',
+    '.css': 'text/css',
+};
 
-    // Read the file and serve it
+const server = http.createServer((req, res) => {
+    // Default to index.html if the root is requested
+    let filePath = req.url === '/'
+        ? path.join(__dirname, 'index.html')
+        : path.join(__dirname, req.url);
+
+    const ext = path.extname(filePath);
+    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
     fs.readFile(filePath, (err, content) => {
         if (err) {
-            res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('500 - Internal Server Error');
+            if (err.code === 'ENOENT') {
+                res.writeHead(404);
+                res.end('404 - File Not Found');
+            } else {
+                res.writeHead(500);
+                res.end('500 - Internal Error');
+            }
             return;
         }
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(content, 'utf-8');
+
+        res.writeHead(200, { 'Content-Type': contentType });
+        res.end(content);
     });
 });
 
